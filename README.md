@@ -19,7 +19,6 @@ Before setting up the project locally, ensure you have the following prerequisit
 
 - [Python](https://www.python.org/downloads/) (>=3.11.4)
 - [Flask](https://flask.palletsprojects.com/)
-- [Django Rest Framework](https://www.django-rest-framework.org/#installation)
 - A Database System (e.g., PostgreSQL, MySQL, SQLite) 
 
 ### Installation Steps
