@@ -119,3 +119,37 @@ class TestUserLogin:
         assert response.json['success'] is False
         assert 'error' in response.json
         assert response.json['error'] == 'Incorrect Password'
+
+
+class TestTokenRefresh:
+    def test_token_refresh(self, client: FlaskClient):
+        """Test the /token/refresh endpoint."""
+        # Register a user first
+        register_data = {
+            'full_name': 'Test User',
+            'email': 'test@example.com',
+            'password': 'testpassword',
+            'phone_number': '1234567890'
+        }
+        response = client.post('/api/v1/user/register', json=register_data)
+        assert response.status_code == 201
+
+        # Log in to get the refresh token
+        login_data = {
+            'email': 'test@example.com',
+            'password': 'testpassword'
+        }
+        response = client.post('/api/v1/user/sign-in', json=login_data)
+        assert response.status_code == 200
+        refresh_token = response.json['data']['refresh']
+
+        # Request a new access token using the refresh token
+        headers = {'Authorization': f'Bearer {refresh_token}'}
+        response = client.post('/api/v1/user/token/refresh', headers=headers)
+
+        # Verify the response
+        assert response.status_code == 202
+        assert response.json['success'] is True
+        assert 'access' in response.json['data']
+        assert response.json['message'] == 'Access Token refreshed successfully'
+

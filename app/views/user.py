@@ -4,7 +4,7 @@ from app.models.user import User
 from app.extensions import db
 from app.constants.http_status_codes import Status
 from werkzeug.security import check_password_hash
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token, create_refresh_token
 
 
 auth = Blueprint('user', __name__)
@@ -85,3 +85,20 @@ def signin():
             'error': 'Incorrect Password',
             'message': 'Incorrect Password',
         }), Status.HTTP_401_UNAUTHORIZED
+    
+
+@auth.post('/token/refresh')
+@jwt_required(refresh=True)
+def refresh_users_token():
+    identity = get_jwt_identity()
+    access = create_access_token(identity=identity)
+
+    return jsonify({
+        'success': True,
+        'status': Status.HTTP_202_ACCEPTED,
+        'error': None,
+        'message': 'Access Token refreshed successfully',
+        'data': {
+            'access': access
+        }
+    }), Status.HTTP_202_ACCEPTED
