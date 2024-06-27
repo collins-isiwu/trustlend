@@ -95,10 +95,10 @@ def refresh_users_token():
 
     return jsonify({
         'success': True,
-        'status': Status.HTTP_202_ACCEPTED,
+        'status': Status.HTTP_200_OK,
         'error': None,
         'message': 'Access Token refreshed successfully',
         'data': {
             'access': access
         }
-    }), Status.HTTP_202_ACCEPTED
+    }), Status.HTTP_200_OK

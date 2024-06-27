@@ -148,7 +148,7 @@ class TestTokenRefresh:
         response = client.post('/api/v1/user/token/refresh', headers=headers)
 
         # Verify the response
-        assert response.status_code == 202
+        assert response.status_code == 200
         assert response.json['success'] is True
         assert 'access' in response.json['data']
         assert response.json['message'] == 'Access Token refreshed successfully'
