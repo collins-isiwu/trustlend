@@ -1,7 +1,8 @@
 from flask import Flask
 from .environment import DevelopmentEnvironment
-from .extensions import db, migrate, ma
+from .extensions import db, migrate, ma, jwt
 from .blueprints import register_blueprints
+
 
 
 def create_app(config=DevelopmentEnvironment):
@@ -12,6 +13,7 @@ def create_app(config=DevelopmentEnvironment):
     db.init_app(app)
     migrate.init_app(app, db)
     ma.init_app(app)
+    jwt.init_app(app)
 
     # register blueprints
     register_blueprints(app)

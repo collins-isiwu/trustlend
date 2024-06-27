@@ -1,6 +1,5 @@
 from app.extensions import db
 from datetime import datetime
-from werkzeug.security import check_password_hash
 from .loan import Loan
 
 class User(db.Model):
@@ -20,5 +19,3 @@ class User(db.Model):
     def __repr__(self) -> str:
         return f"User> {self.full_name}"
     
-    def check_password(self, password):
-        return check_password_hash(self.password, password)

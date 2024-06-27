@@ -3,7 +3,7 @@ from marshmallow import fields, validate, validates, ValidationError, pre_load
 from app.extensions import ma
 from werkzeug.security import generate_password_hash
 
-class UserSchema(ma.SQLAlchemySchema):
+class UserRegisterSchema(ma.SQLAlchemySchema):
     class Meta:
         model = User
         load_instance = True
@@ -16,9 +16,11 @@ class UserSchema(ma.SQLAlchemySchema):
     @pre_load
     def hash_password(self, data, **kwargs):
         """Hash the password before saving to the database."""
-        if 'password' in data:
-            data['password'] = generate_password_hash(data['password'])
-            return data
+        password = data.get('password')
+        # Check if password exists and have been hashed before
+        if password and not password.startswith(('scrypt:')):
+            data['password'] = generate_password_hash(password)
+        return data
 
     @validates('email')
     def validate_email_unique(self, value):
@@ -27,4 +29,14 @@ class UserSchema(ma.SQLAlchemySchema):
         if existing_user:
             raise ValidationError('Email already exists.')
 
-user_schema = UserSchema()
+user_register_schema = UserRegisterSchema()
+
+
+class UserLoginSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = User
+
+    email = fields.Email(required=True)
+    password = fields.String(required=True, load_only=True)
+
+user_login_schema = UserLoginSchema()
