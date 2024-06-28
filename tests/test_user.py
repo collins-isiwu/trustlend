@@ -3,9 +3,9 @@ from flask import Flask
 from flask.testing import FlaskClient
 from app import create_app, db
 from app.models.user import User
-from app.constants.http_status_codes import Status
 from app.environment import TestingEnvironment
 from werkzeug.security import check_password_hash
+from flask_jwt_extended import create_access_token
 
 
 @pytest.fixture
@@ -24,6 +24,30 @@ def app():
 def client(app: Flask) -> FlaskClient:
     """A test client for the app"""
     return app.test_client()
+
+@pytest.fixture
+def user(app: Flask) -> User:
+    """Create a test user for UserViewTest."""
+    user = User(
+        full_name='Test User',
+        email='test@example.com',
+        password='testpassword',
+        phone_number='1234567890'
+    )
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+@pytest.fixture
+def access_token(user: User) -> str:
+    """Create a JWT access token for the test user."""
+    access_token = create_access_token(identity=user.id)
+    return access_token
+
+@pytest.fixture
+def auth_headers(access_token):
+    """Create authorization headers with JWT token for UserViewTest."""
+    return {'Authorization': f'Bearer {access_token}'}
 
 
 class TestUserRegistration:
@@ -153,3 +177,33 @@ class TestTokenRefresh:
         assert 'access' in response.json['data']
         assert response.json['message'] == 'Access Token refreshed successfully'
 
+
+class TestUserView:
+    def test_get_user_details(self, client: FlaskClient, user: User, auth_headers: dict):
+        """Test retrieving user details."""
+        response = client.get('/api/v1/user/detail', headers=auth_headers)
+        
+        assert response.status_code == 200
+        assert response.json['success'] is True
+        assert response.json['data']['email'] == user.email
+        assert response.json['data']['full_name'] == user.full_name
+    
+    def test_update_user_details(self, client: FlaskClient, user: User, auth_headers: dict):
+        """Test updating user details."""
+        update_data = {
+            'full_name': 'Updated User',
+            'phone_number': '0987654321'
+        }
+        
+        response = client.put('/api/v1/user/detail', json=update_data, headers=auth_headers)
+        
+        assert response.status_code == 200
+        assert response.json['success'] is True
+        assert response.json['data']['full_name'] == 'Updated User'
+        assert response.json['data']['phone_number'] == '0987654321'
+        
+        # Verify changes in the database
+        updated_user = db.session.get(User, user.id)
+        assert updated_user.full_name == 'Updated User'
+        assert updated_user.phone_number == '0987654321'
+    

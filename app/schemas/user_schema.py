@@ -28,6 +28,9 @@ class UserRegisterSchema(ma.SQLAlchemySchema):
         existing_user = User.query.filter_by(email=value).first()
         if existing_user:
             raise ValidationError('Email already exists.')
+        
+    def update(self):
+        pass
 
 user_register_schema = UserRegisterSchema()
 
@@ -40,3 +43,24 @@ class UserLoginSchema(ma.SQLAlchemySchema):
     password = fields.String(required=True, load_only=True)
 
 user_login_schema = UserLoginSchema()
+
+
+
+class UserUpdateSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = User
+        load_instance = True
+
+    email = fields.Email(required=False)
+    full_name = fields.String(required=False, validate=validate.Length(min=3, max=120))
+    phone_number = fields.String(required=False)
+
+    @validates('email')
+    def validate_email_unique(self, value):
+        """Ensure email is unique for updates if email is provided."""
+        if value:
+            existing_user = User.query.filter_by(email=value).first()
+            if existing_user:
+                raise ValidationError('Email already exists.')
+
+user_update_schema = UserUpdateSchema()
