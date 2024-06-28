@@ -8,7 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token, create_refresh_token
 
 
-auth = Blueprint('user', __name__)
+auth = Blueprint('auth', __name__)
 
 @auth.post('/register')
 def register():
