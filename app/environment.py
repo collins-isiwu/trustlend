@@ -3,6 +3,7 @@ import os
 class Environment:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
 
 
 class DevelopmentEnvironment(Environment):
