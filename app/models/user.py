@@ -14,7 +14,8 @@ class User(db.Model):
     active_loan = db.Column(db.Boolean(), default=False)
     phone_number = db.Column(db.String(20), nullable=True)
     date_joined = db.Column(db.DateTime, default=datetime.now())
-    loans = db.relationship('Loan', back_populates='user', lazy=True)
+    
+    loans = db.relationship('Loan', back_populates='user')
 
     def __repr__(self) -> str:
         return f"User> {self.full_name}"
