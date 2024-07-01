@@ -19,10 +19,11 @@ def create_app(config=DevelopmentEnvironment):
     admin = Admin(app, name='Trustlend Admin Panel', template_mode='bootstrap4')
 
     # Add model views
-    from app.models import User, Loan  # Import your models
+    from app.models import User, Loan, Verification  # Import your models
 
     admin.add_view(ModelView(User, db.session))
     admin.add_view(ModelView(Loan, db.session))
+    admin.add_view(ModelView(Verification, db.session))
 
     # register blueprints
     register_blueprints(app)

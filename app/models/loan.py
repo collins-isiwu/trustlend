@@ -9,7 +9,7 @@ class Loan(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     # Define a relationship to the User model
-    user = db.relationship('User', back_populates='loans')
+    user = db.relationship('User', back_populates='loans', lazy=True)
     
     def __repr__(self) -> str:
         return f"Loan> {self.amount}"

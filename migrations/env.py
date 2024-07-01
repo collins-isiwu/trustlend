@@ -1,9 +1,14 @@
 import logging
 from logging.config import fileConfig
+from app import create_app
+from app.extensions import db
+from app.models import User, Loan, Verification
 
 from flask import current_app
 
 from alembic import context
+
+app = create_app()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -97,10 +102,11 @@ def run_migrations_online():
     connectable = get_engine()
 
     with connectable.connect() as connection:
+        # custom configuration with db
         context.configure(
-            connection=connection,
-            target_metadata=get_metadata(),
-            **conf_args
+            connection=db.engine.connect(),
+            target_metadata=db.metadata,
+            **app.extensions['migrate'].configure_args
         )
 
         with context.begin_transaction():
