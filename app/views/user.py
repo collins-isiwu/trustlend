@@ -111,7 +111,7 @@ class UserView(MethodView):
         """Get user details"""
         user_id = get_jwt_identity()
         user = db.session.get(User, user_id)
-        if user_id is None:
+        if user is None:
             return jsonify({
                 'success': False,
                 'status': Status.HTTP_404_NOT_FOUND,

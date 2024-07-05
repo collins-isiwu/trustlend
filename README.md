@@ -35,7 +35,7 @@ Before setting up the project locally, ensure you have the following prerequisit
 
 3. Set up a virtual environment:
 
-        python3 -m venv venv
+        python3 -m venv .venv
 
 
 4. Activate your virtual environment:
@@ -51,15 +51,10 @@ Before setting up the project locally, ensure you have the following prerequisit
 6. Create a .env file and set neccessary secret keys below:
 
 
-7. Apply migrations to create the database schema:
+7. Start the development server: 
 
-        python3 manage.py migrate
-
-
-8. Start the development server: 
- ```
- Flask run
- ```
+        Flask run
+ 
 
 The API should now be running locally at [http://localhost:5000/](http://localhost:5000/).
 

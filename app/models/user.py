@@ -18,5 +18,5 @@ class User(db.Model):
     loans = db.relationship('Loan', back_populates='user')
 
     def __repr__(self) -> str:
-        return f"User> {self.full_name}"
+        return f"User> {self.email}"
     

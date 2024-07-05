@@ -4,6 +4,7 @@ from .extensions import db, migrate, ma, jwt
 from .blueprints import register_blueprints
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from app.models import User, Verification, Loan, RequestLoan 
 
 def create_app(config=DevelopmentEnvironment):
     app = Flask(__name__)
@@ -18,12 +19,12 @@ def create_app(config=DevelopmentEnvironment):
     # Initialize Flask-Admin
     admin = Admin(app, name='Trustlend Admin Panel', template_mode='bootstrap4')
 
-    # Add model views
-    from app.models import User, Loan, Verification  # Import your models
-
+    # Add model views to admin
     admin.add_view(ModelView(User, db.session))
-    admin.add_view(ModelView(Loan, db.session))
     admin.add_view(ModelView(Verification, db.session))
+    admin.add_view(ModelView(RequestLoan, db.session))
+    admin.add_view(ModelView(Loan, db.session))
+
 
     # register blueprints
     register_blueprints(app)
