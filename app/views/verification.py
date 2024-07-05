@@ -5,7 +5,8 @@ from app.constants.http_status_codes import Status
 from app.extensions import db
 from app.models import User, Verification
 from marshmallow import ValidationError
-from app.schemas.verification_schema import verification_schema
+from .utils import admin_required
+from app.schemas import verification_schema
 
 verify = Blueprint('verify', __name__)
 
@@ -89,10 +90,67 @@ class VerificationView(MethodView):
             'message': 'Verification request has been created',
             'data': verification_data
         }), Status.HTTP_201_CREATED
+    
+
+    @jwt_required()
+    @admin_required
+    def put(self, user_id):
+        """Verify Users. Admins only"""
+        data = request.get_json()
+
+        user = db.session.get(User, user_id)
+        if user is None:
+            return jsonify({
+                'success': False,
+                'status': Status.HTTP_404_NOT_FOUND,
+                'error': None,
+                'message': 'User intended to verify not found.',
+            }), Status.HTTP_404_NOT_FOUND
+        
+        verification = Verification.query.filter_by(user_id=user_id).first()
+        if not verification:
+            return jsonify({
+                'success': False,
+                'status': Status.HTTP_404_NOT_FOUND,
+                'error': None,
+                'message': 'User has not requested for verification.'
+            }), Status.HTTP_404_NOT_FOUND
+        
+        if data.get('is_verified') == False:
+            return jsonify({
+                'success': False,
+                'status': Status.HTTP_400_BAD_REQUEST,
+                'error': None,
+                'message': 'Verification not approved!'
+            }), Status.HTTP_400_BAD_REQUEST
+        
+        # check whether user is already verified
+        if verification.is_verified:
+            return jsonify({
+                'success': False,
+                'status': Status.HTTP_208_ALREADY_REPORTED,
+                'error': None,
+                'message': 'User already approved!'
+            }), Status.HTTP_208_ALREADY_REPORTED
+        
+        # Approve verification
+        verification.is_verified = data.get('is_verified')
+        db.session.commit()
+
+        # serialize verification data
+        serialized_data = verification_schema.dump(verification)
+        return jsonify({
+            'success': True,
+            'status': Status.HTTP_200_OK,
+            'error': None,
+            'Message': 'Verification Complete!',
+            'data': serialized_data
+        }), Status.HTTP_200_OK
         
 
 # Register the class-based view with the blueprint
 verify_view = VerificationView.as_view('verify_view')
 verify.add_url_rule('', view_func=verify_view, methods=['GET', 'POST'])
+verify.add_url_rule('/<int:user_id>', view_func=verify_view, methods=['PUT'])
 
 

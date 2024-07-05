@@ -105,12 +105,12 @@ class RequestLoanView(MethodView):
             }), Status.HTTP_400_BAD_REQUEST
         
         # check wether admin approved the loan request
-        if data.get('approval').lower() == 'false':
+        if data.get('approval') == False:
             return jsonify({
                 'success': False,
                 'status': Status.HTTP_400_BAD_REQUEST,
                 'error': None,
-                'message': 'You did not approve the loan request'
+                'message': 'Loan request not approved!'
             }), Status.HTTP_400_BAD_REQUEST
         
         # Retrieve the loan request from the database
