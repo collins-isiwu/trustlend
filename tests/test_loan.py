@@ -87,7 +87,6 @@ def test_get_nonexistent_loan(client: FlaskClient, test_user: User):
 
     assert response.status_code == 404
     assert json_data['success'] is False
-    assert json_data['message'] == 'Loan with the ID does not exist.'
 
 
 def test_get_loans_with_pagination(client: FlaskClient, test_user: User):

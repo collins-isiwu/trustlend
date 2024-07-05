@@ -1,11 +1,12 @@
 from flask import Blueprint, request, jsonify
 from flask.views import MethodView
-from app.schemas.user_schema import UserUpdateSchema, user_register_schema, user_login_schema, user_update_schema
-from app.models.user import User
+from app.schemas import user_register_schema, user_login_schema, user_update_schema
+from app.models import User, TokenBlacklist
 from app.extensions import db
 from app.constants.http_status_codes import Status
-from werkzeug.security import check_password_hash, generate_password_hash
-from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token, create_refresh_token
+from werkzeug.security import check_password_hash
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required, create_access_token, create_refresh_token
+from .utils import is_token_blacklisted
 
 
 auth = Blueprint('auth', __name__)
@@ -166,3 +167,27 @@ class UserView(MethodView):
 # Register the class-based view with the Blueprint
 user_view = UserView.as_view('user_view')
 auth.add_url_rule('/detail', view_func=user_view, methods=['GET', 'PUT'])
+
+
+class LogoutView(MethodView):
+
+    @jwt_required()
+    def post(self): 
+        """Logout user and invalidate the token"""
+
+        # Get the unique identifier for the JWT
+        jti = get_jwt()['jti']  
+        token = TokenBlacklist(jti=jti)
+        db.session.add(token)
+        db.session.commit()
+
+        return jsonify({
+            'success': True,
+            'Status': Status.HTTP_200_OK,
+            'error': None,
+            'message': 'Token has been revoked and user logged out.'
+        }), Status.HTTP_200_OK
+    
+# Register the class-based view with the Blueprint
+logout_view = LogoutView.as_view('logout_view')
+auth.add_url_rule('/sign-out', view_func=logout_view, methods=['POST'])

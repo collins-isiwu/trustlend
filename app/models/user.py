@@ -20,3 +20,14 @@ class User(db.Model):
     def __repr__(self) -> str:
         return f"User> {self.email}"
     
+
+class TokenBlacklist(db.Model):
+    __tablename__ = 'tokenblacklists'
+
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(36), nullable=False, unique=True)
+    created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
+
+    def __repr__(self) -> str:
+        return f'<TokenBlacklist {self.jti}'
+    

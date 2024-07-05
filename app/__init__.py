@@ -3,8 +3,9 @@ from .environment import DevelopmentEnvironment
 from .extensions import db, migrate, ma, jwt
 from .blueprints import register_blueprints
 from flask_admin import Admin
+from app.views import is_token_blacklisted
 from flask_admin.contrib.sqla import ModelView
-from app.models import User, Verification, Loan, RequestLoan 
+from app.models import User, Verification, Loan, RequestLoan, TokenBlacklist
 
 def create_app(config=DevelopmentEnvironment):
     app = Flask(__name__)
@@ -16,6 +17,13 @@ def create_app(config=DevelopmentEnvironment):
     ma.init_app(app)
     jwt.init_app(app)
 
+    # Ensure that the JWT configuration checks for blacklisted tokens
+    @jwt.token_in_blocklist_loader
+    def check_if_token_in_blacklist(jwt_header, jwt_payload):
+        jti = jwt_payload['jti']
+        return is_token_blacklisted(jti)
+
+
     # Initialize Flask-Admin
     admin = Admin(app, name='Trustlend Admin Panel', template_mode='bootstrap4')
 
@@ -24,6 +32,7 @@ def create_app(config=DevelopmentEnvironment):
     admin.add_view(ModelView(Verification, db.session))
     admin.add_view(ModelView(RequestLoan, db.session))
     admin.add_view(ModelView(Loan, db.session))
+    admin.add_view(ModelView(TokenBlacklist, db.session))
 
 
     # register blueprints
