@@ -207,3 +207,23 @@ class TestUserView:
         assert updated_user.full_name == 'Updated User'
         assert updated_user.phone_number == '0987654321'
     
+
+class TestLogoutView:
+    def test_logout(self, client: FlaskClient, auth_headers: dict):
+        """Test logout and token invalidation."""
+        response = client.post('/api/v1/user/sign-out', headers=auth_headers)
+
+        assert response.status_code == 200
+        assert response.json['success'] is True
+        assert response.json['message'] == 'Token has been revoked and user logged out.'
+
+    def test_access_with_revoked_token(self, client: FlaskClient, auth_headers: dict):
+        """Test accessing endpoint with revoked token."""
+        # Revoke the token by logging out
+        client.post('/api/v1/user/sign-out', headers=auth_headers)
+
+        # Attempt to access a protected endpoint with the same token
+        response = client.get('/api/v1/user/detail', headers=auth_headers)
+
+        assert response.status_code == 401
+        assert response.json['msg'] == 'Token has been revoked'
