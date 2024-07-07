@@ -94,7 +94,7 @@ class VerificationView(MethodView):
 
     @jwt_required()
     @admin_required
-    def put(self, user_id):
+    def patch(self, user_id):
         """Verify Users. Admins only"""
         data = request.get_json()
 
@@ -151,6 +151,6 @@ class VerificationView(MethodView):
 # Register the class-based view with the blueprint
 verify_view = VerificationView.as_view('verify_view')
 verify.add_url_rule('', view_func=verify_view, methods=['GET', 'POST'])
-verify.add_url_rule('/<int:user_id>', view_func=verify_view, methods=['PUT'])
+verify.add_url_rule('/<int:user_id>', view_func=verify_view, methods=['PATCH'])
 
 
