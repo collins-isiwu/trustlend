@@ -90,7 +90,7 @@ class RequestLoanView(MethodView):
 
     @jwt_required()
     @admin_required
-    def put(self, request_loan_id):
+    def patch(self, request_loan_id):
         """Approve User Loan Request and Create Loan. Admin Only"""
         data = request.get_json()
 
@@ -180,7 +180,7 @@ class RequestLoanView(MethodView):
 # Register the view
 request_loan_view = RequestLoanView.as_view('request_loan_view')
 loans.add_url_rule('request', view_func=request_loan_view, methods=['POST'])
-loans.add_url_rule('request/<int:request_loan_id>', view_func=request_loan_view, methods=['GET', 'PUT'])
+loans.add_url_rule('request/<int:request_loan_id>', view_func=request_loan_view, methods=['GET', 'PATCH'])
 
 
 

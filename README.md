@@ -48,8 +48,16 @@ Before setting up the project locally, ensure you have the following prerequisit
         pip install -r requirements.txt
 
 
-6. Create a .env file and set neccessary secret keys below:
+6. Create a .env file and set neccessary secret keys below: 
 
+        SECRET_KEY 
+        JWT_SECRET_KEY
+
+7. Run Flask-Migrate commands to migrate db locally:
+
+        flask db init
+        flask db migrate -m "Initial migration"
+        flask db upgrate
 
 7. Start the development server: 
 
