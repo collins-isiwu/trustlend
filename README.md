@@ -66,6 +66,7 @@ Before setting up the project locally, ensure you have the following prerequisit
 
 The API should now be running locally at [http://localhost:5000/](http://localhost:5000/).
 
+Flask Admin runs at [http://localhost:5000/admin](http://localhost:5000/admin).
 
 # Commit Standards
 

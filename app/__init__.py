@@ -23,7 +23,6 @@ def create_app(config=DevelopmentEnvironment):
         jti = jwt_payload['jti']
         return is_token_blacklisted(jti)
 
-
     # Initialize Flask-Admin
     admin = Admin(app, name='Trustlend Admin Panel', template_mode='bootstrap4')
 
