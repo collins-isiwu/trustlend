@@ -55,10 +55,10 @@ class RequestLoanView(MethodView):
         if pending_loan:
             return jsonify({
                 'success': False,
-                'status': Status.HTTP_208_ALREADY_REPORTED,
+                'status': Status.HTTP_400_BAD_REQUEST,
                 'error': None,
                 'message': 'You have a pending loan request'
-            }), Status.HTTP_208_ALREADY_REPORTED
+            }), Status.HTTP_400_BAD_REQUEST
         
         data = request.get_json()
         data['user_id'] = user_id   # Insert the user_id data
