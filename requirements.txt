@@ -16,6 +16,7 @@ Flask-Migrate==4.0.7
 Flask-SQLAlchemy==3.1.1
 flask-swagger-ui==4.11.1
 greenlet==3.0.3
+gunicorn==22.0.0
 importlib_resources==6.4.0
 iniconfig==2.0.0
 itsdangerous==2.2.0
@@ -30,6 +31,7 @@ packaging==24.1
 pipenv==2023.11.15
 platformdirs==4.1.0
 pluggy==1.5.0
+psycopg2-binary==2.9.9
 PyJWT==2.8.0
 pytest==8.2.2
 python-dotenv==1.0.1

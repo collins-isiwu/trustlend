@@ -1,5 +1,4 @@
 from flask import Flask
-from .environment import DevelopmentEnvironment
 from .extensions import db, migrate, ma, jwt
 from .blueprints import register_blueprints
 from flask_admin import Admin
@@ -7,7 +6,7 @@ from app.views import is_token_blacklisted
 from flask_admin.contrib.sqla import ModelView
 from app.models import User, Verification, Loan, RequestLoan, TokenBlacklist
 
-def create_app(config=DevelopmentEnvironment):
+def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
 
