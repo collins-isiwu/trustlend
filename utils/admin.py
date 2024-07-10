@@ -2,7 +2,7 @@ from functools import wraps
 from flask import jsonify
 from flask_jwt_extended import get_jwt_identity
 from app.extensions import db
-from app.models import User, TokenBlacklist
+from app.models import User
 from app.constants.http_status_codes import Status
 
 def admin_required(fn):
@@ -33,8 +33,3 @@ def admin_required(fn):
         return fn(*args, **kwargs)
     
     return decorated_function
-
-
-def is_token_blacklisted(jti):
-    result = db.session.query(TokenBlacklist.id).filter_by(jti=jti).scalar() is not None
-    return result

@@ -1,10 +1,9 @@
 from datetime import datetime
 from flask import jsonify, request, Blueprint
 from flask.views import MethodView
-from sqlalchemy.orm.exc import NoResultFound
 from app.models import Loan, RequestLoan, User
 from app.extensions import db
-from .utils import admin_required
+from utils.admin import admin_required
 from app.constants.http_status_codes import Status
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.schemas import loan_schema, request_loan_schema, edit_request_loan_schema
