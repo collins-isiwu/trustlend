@@ -14,3 +14,7 @@ class DevelopmentEnvironment(Environment):
 class TestingEnvironment(Environment):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
+
+
+class ProductionEnvironment(Environment):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
