@@ -37,5 +37,4 @@ def admin_required(fn):
 
 def is_token_blacklisted(jti):
     result = db.session.query(TokenBlacklist.id).filter_by(jti=jti).scalar() is not None
-    print('result>>>>>>>>>>>', result)
     return result

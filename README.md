@@ -7,9 +7,10 @@ TrustLend, is a go-to solution for fast and secure loan access
 
 README.md Backend API
 
-Live link is at https://
+Live link is at [https://trustlend.onrender.com/](https://trustlend.onrender.com/)
 
-Doc link at https://
+Doc link at [https://trustlend.onrender.com/](https://trustlend.onrender.com/)
+
 
 ## Installation Instructions
 

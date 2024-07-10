@@ -149,6 +149,11 @@ class RequestLoanView(MethodView):
             )
             db.session.add(loan)
 
+            # Update User model 
+            user = db.session.get(User, request_loan.user_id)
+            user.active_loan = True
+            db.session.add(user)
+
             # Commit the transaction
             db.session.commit()
 
