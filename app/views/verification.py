@@ -5,7 +5,7 @@ from app.constants.http_status_codes import Status
 from app.extensions import db
 from app.models import User, Verification
 from marshmallow import ValidationError
-from .utils import admin_required
+from utils.admin import admin_required
 from app.schemas import verification_schema
 
 verify = Blueprint('verify', __name__)
