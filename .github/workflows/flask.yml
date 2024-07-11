@@ -34,7 +34,11 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Run migrations
+        env:
+            FLASK_APP: dev.py
+            FLASK_ENV: development
         run: |
+          source venv/bin/activate
           flask db init || true
           flask db migrate -m "Initial migration"
           flask upgrade
@@ -48,4 +52,5 @@ jobs:
 
       - name: Run tests
         run: |
+          source venv/bin/activate
           pytest tests
