@@ -116,7 +116,7 @@ def test_post_request_loan_with_existing(client: FlaskClient, test_user: User):
         data=json.dumps(data),
         content_type='application/json'
     )
-    assert response.status_code == 208
+    assert response.status_code == 400
     response_data = response.json
     assert response_data['success'] == False
     assert response_data['message'] == 'You have a pending loan request'
@@ -140,7 +140,7 @@ def test_put_request_loan_approve(client: FlaskClient, test_user: User):
         'approval': 'True'  # Should be a string to match form data
     }
 
-    response = client.put(
+    response = client.patch(
         f'/api/v1/loan/request/{request_loan.id}',
         headers={'Authorization': f'Bearer {token}'},
         data=json.dumps(data),
@@ -171,7 +171,7 @@ def test_put_request_loan_already_approved(client: FlaskClient, test_user: User)
         'approval': 'True'
     }
 
-    response = client.put(
+    response = client.patch(
         f'/api/v1/loan/request/{request_loan.id}',
         headers={'Authorization': f'Bearer {token}'},
         data=json.dumps(data),
