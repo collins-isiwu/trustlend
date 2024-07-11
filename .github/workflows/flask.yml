@@ -41,7 +41,7 @@ jobs:
           source venv/bin/activate
           flask db init || true
           flask db migrate -m "Initial migration"
-          flask upgrade
+          flask db upgrade
 
       - name: Print debugging information
         run: |
