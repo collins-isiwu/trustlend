@@ -48,11 +48,11 @@ class LoanBalance(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     total_loan = db.Column(db.Numeric(10, 2), default=0.00)
-    loan_paid = db.Column(db.Numeric(10, 2), default=0.00)
+    total_paid = db.Column(db.Numeric(10, 2), default=0.00)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
     last_updated = db.Column(db.DateTime(), default=datetime.now(), onupdate=datetime.now())
 
     user = db.relationship('User', back_populates='loan_balance', uselist=False)
-
+        
     def __repr__(self) -> str:
-        return f"<LoanBalance id={self.id} user_id={self.user_id} total_loan={self.total_loan} loan_paid={self.loan_paid}>"
+        return f"<LoanBalance id={self.id} user_id={self.user_id} total_loan={self.total_loan} loan_paid={self.total_paid}>"

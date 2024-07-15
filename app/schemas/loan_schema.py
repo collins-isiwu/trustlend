@@ -1,5 +1,5 @@
 from marshmallow import validate, fields
-from app.models import Loan, RequestLoan, AmortizationRateEnum
+from app.models import Loan, RequestLoan, LoanBalance, AmortizationRateEnum
 from app.extensions import ma
 
 class RequestLoanSchema(ma.SQLAlchemyAutoSchema):
@@ -41,3 +41,16 @@ class EditRequestLoanSchema(ma.SQLAlchemySchema):
     approval = fields.Boolean(required=True)
 
 edit_request_loan_schema = EditRequestLoanSchema()
+
+
+class LoanBalanceSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = LoanBalance
+        load_instance = True
+
+    total_loan = fields.Decimal(dump_only=True, places=2)
+    total_paid = fields.Decimal(dump_only=True, places=2)
+    last_updated = fields.DateTime(dump_only=True)
+
+# Usage
+loan_balance_schema = LoanBalanceSchema()

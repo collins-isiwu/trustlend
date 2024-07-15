@@ -15,7 +15,6 @@ class Repayment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     user = db.relationship('User', backref=db.backref('repayments', lazy=True))
-    loan = db.relationship('Loan', back_ref=db.backref('repayments', lazy=True))
     
     class Meta:
         ordering = ['-paid_at']

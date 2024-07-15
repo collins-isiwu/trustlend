@@ -4,7 +4,7 @@ from .blueprints import register_blueprints
 from flask_admin import Admin
 from utils.jwt import is_token_blacklisted
 from flask_admin.contrib.sqla import ModelView
-from app.models import User, Verification, Loan, RequestLoan, TokenBlacklist
+from app.models import User, Verification, Loan, RequestLoan, TokenBlacklist, LoanBalance
 
 def create_app(config):
     app = Flask(__name__)
@@ -31,6 +31,7 @@ def create_app(config):
     admin.add_view(ModelView(RequestLoan, db.session))
     admin.add_view(ModelView(Loan, db.session))
     admin.add_view(ModelView(TokenBlacklist, db.session))
+    admin.add_view(ModelView(LoanBalance, db.session))
 
 
     # register blueprints

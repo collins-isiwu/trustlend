@@ -1,8 +1,9 @@
 from datetime import datetime
 from flask import jsonify, request, Blueprint
 from flask.views import MethodView
-from app.models import Loan, RequestLoan, User
+from app.models import Loan, RequestLoan, User, LoanBalance
 from app.extensions import db
+from decimal import Decimal
 from utils.admin import admin_required
 from app.constants.http_status_codes import Status
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -147,6 +148,23 @@ class RequestLoanView(MethodView):
                 request_loan_id=request_loan.id
             )
             db.session.add(loan)
+
+            # Calculate interest
+            interest = request_loan.amount * Decimal(RequestLoan.INTEREST_RATE)
+
+            # Add loan to LoanBalance
+            loan_balance = LoanBalance.query.filter_by(user_id=request_loan.user_id).first()
+            if loan_balance:
+                loan_balance.total_loan += request_loan.amount + interest
+                loan_balance.last_updated = datetime.now()
+            else:
+                loan_balance = LoanBalance(
+                    user_id=request_loan.user_id,
+                    total_loan=request_loan.amount + interest,
+                    total_paid=0.00,
+                    last_updated=datetime.now()
+                )
+                db.session.add(loan_balance)
 
             # Update User model 
             user = db.session.get(User, request_loan.user_id)

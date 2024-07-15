@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask.views import MethodView
 from app.schemas import user_register_schema, user_login_schema, user_update_schema
-from app.models import User, TokenBlacklist
+from app.models import User, TokenBlacklist, LoanBalance
 from app.extensions import db
 from app.constants.http_status_codes import Status
 from werkzeug.security import check_password_hash
@@ -25,6 +25,13 @@ def register():
     user = user_register_schema.load(data)
     db.session.add(user)
     db.session.commit()
+
+    # Create LoanBalance
+    loan_balance = LoanBalance.query.filter_by(user_id=user.id).first()
+    if loan_balance is None:
+        loan_balance = LoanBalance(user_id=user.id)
+        db.session.add(loan_balance)
+        db.session.commit()
 
     # Serialize the user object
     serialized_user = user_register_schema.dump(user)
