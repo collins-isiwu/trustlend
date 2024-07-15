@@ -36,7 +36,7 @@ class RequestLoanView(MethodView):
 
     @jwt_required()
     def post(self):
-        """Create Loan"""
+        """Create RequestLoan"""
         user_id = get_jwt_identity()
         user = db.session.get(User, user_id)
 
@@ -48,7 +48,7 @@ class RequestLoanView(MethodView):
                 'message': 'No user found with the given ID',
             }), Status.HTTP_404_NOT_FOUND
         
-        # check whether user has an existing loan or pending loan request
+        # check whether user has a pending loan request
         pending_loan = RequestLoan.query.filter_by(user_id=user_id, approval=False).first()
 
         if pending_loan:
@@ -143,7 +143,7 @@ class RequestLoanView(MethodView):
             loan = Loan(
                 amount=request_loan.amount,
                 user_id=request_loan.user_id,
-                timestamp=datetime.now(),
+                start_at=datetime.now(),
                 request_loan_id=request_loan.id
             )
             db.session.add(loan)
