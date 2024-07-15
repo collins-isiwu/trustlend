@@ -7,7 +7,7 @@ from decimal import Decimal
 from utils.admin import admin_required
 from app.constants.http_status_codes import Status
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from app.schemas import loan_schema, request_loan_schema, edit_request_loan_schema
+from app.schemas import loan_schema, request_loan_schema, edit_request_loan_schema, loan_balance_schema
 
 loans = Blueprint('loans', __name__)
 
@@ -294,3 +294,34 @@ class LoanView(MethodView):
 loan_view = LoanView.as_view('loan_view')
 loans.add_url_rule('', view_func=loan_view, methods=['GET'])
 loans.add_url_rule('/<int:loan_id>', view_func=loan_view, methods=['GET'])
+
+
+class LoanBalanceAPI(MethodView):
+
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()
+        user = db.session.get(User, user_id)
+
+        if user is None:
+            return jsonify({
+                'success': False,
+                'status': Status.HTTP_404_NOT_FOUND,
+                'error': 'User Not Found',
+                'message': 'No user found with the given ID',
+            }), Status.HTTP_404_NOT_FOUND    
+
+        loan_balance = LoanBalance.query.filter_by(user_id=user_id).first() 
+
+        # serialize
+        loan_data = loan_balance_schema.dump(loan_balance)
+        return jsonify({
+            'success': True,
+            'status': Status.HTTP_200_OK,
+            'error': None,
+            'message': 'Loan Balance Retrieved!',
+            'data': loan_data
+        }), Status.HTTP_200_OK
+    
+loan_balance_view = LoanBalanceAPI.as_view('loan_balance_view')
+loans.add_url_rule('/balance', view_func=loan_balance_view, methods=['GET'])

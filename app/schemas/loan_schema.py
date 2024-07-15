@@ -52,5 +52,4 @@ class LoanBalanceSchema(ma.SQLAlchemyAutoSchema):
     total_paid = fields.Decimal(dump_only=True, places=2)
     last_updated = fields.DateTime(dump_only=True)
 
-# Usage
 loan_balance_schema = LoanBalanceSchema()

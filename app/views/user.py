@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask.views import MethodView
-from app.schemas import user_register_schema, user_login_schema, user_update_schema
+from app.schemas import user_register_schema, user_login_schema, user_update_schema, loan_balance_schema
 from app.models import User, TokenBlacklist, LoanBalance
 from app.extensions import db
 from app.constants.http_status_codes import Status
@@ -125,13 +125,20 @@ class UserView(MethodView):
                 'message': 'No user found with the given ID',
             }), Status.HTTP_404_NOT_FOUND
         
-        user_data = user_register_schema.dump(user)
+        # Query for loan balance
+        loan_balance = LoanBalance.query.filter_by(user_id=user_id).first()
+
+        user_data = user_register_schema.dump(user) 
+        loan_data = loan_balance_schema.dump(loan_balance)
         return jsonify({
             'success': True,
             'status': Status.HTTP_200_OK,
             'error': None,
             'message': 'User fetched successfully',
-            'data': user_data
+            'data': {
+                'user': user_data,
+                'loan': loan_data
+            }
         }), Status.HTTP_200_OK
     
     @jwt_required()
