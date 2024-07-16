@@ -8,7 +8,7 @@ class RequestLoanSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
 
     interest_rate = fields.Float(dump_only=True, dump_default=RequestLoan.INTEREST_RATE)
-    amount = fields.Decimal(required=True, validate=validate.Range(min=0.01))
+    amount = fields.Decimal(required=True, places=2, validate=validate.Range(min=0.01))
     approval = fields.Boolean(dump_only=True)
     date_requested = fields.DateTime(dump_only=True)
     amortization_rate = fields.String(
@@ -24,7 +24,7 @@ class LoanSchema(ma.SQLAlchemyAutoSchema):
         model = Loan
         load_instance = True
 
-    amount = fields.Decimal(required=True, validate=validate.Range(min=0.01))
+    amount = fields.Decimal(required=True, places=2, validate=validate.Range(min=0.01))
     paid_off = fields.Boolean(dump_only=True)
     user_id = fields.Integer(required=True, validate=validate.Range(min=1), load_only=True)
     start_at = fields.DateTime(dump_only=True)

@@ -10,7 +10,6 @@ class Repayment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     repay_amount = db.Column(db.Numeric(10, 2))
     is_approved = db.Column(db.Boolean, default=False)
-    email = db.Column(db.String(255), nullable=False)
     paid_at = db.Column(db.DateTime, default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 

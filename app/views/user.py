@@ -3,7 +3,7 @@ from flask.views import MethodView
 from app.schemas import user_register_schema, user_login_schema, user_update_schema, loan_balance_schema
 from app.models import User, TokenBlacklist, LoanBalance
 from app.extensions import db
-from app.constants.http_status_codes import Status
+from app.constants import Status
 from werkzeug.security import check_password_hash
 from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required, create_access_token, create_refresh_token
 

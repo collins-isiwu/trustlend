@@ -2,7 +2,7 @@ from flask import Flask
 from .extensions import db, migrate, ma, jwt
 from .blueprints import register_blueprints
 from flask_admin import Admin
-from utils.jwt import is_token_blacklisted
+from utils import is_token_blacklisted
 from flask_admin.contrib.sqla import ModelView
 from app.models import User, Verification, Loan, RequestLoan, TokenBlacklist, LoanBalance
 
