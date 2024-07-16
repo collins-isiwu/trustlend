@@ -185,8 +185,8 @@ class TestUserView:
         
         assert response.status_code == 200
         assert response.json['success'] is True
-        assert response.json['data']['email'] == user.email
-        assert response.json['data']['full_name'] == user.full_name
+        assert response.json['data']['user']['email'] == user.email
+        assert response.json['data']['user']['full_name'] == user.full_name
     
     def test_update_user_details(self, client: FlaskClient, user: User, auth_headers: dict):
         """Test updating user details."""
