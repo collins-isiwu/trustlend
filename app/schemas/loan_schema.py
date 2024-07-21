@@ -43,7 +43,7 @@ class EditRequestLoanSchema(ma.SQLAlchemySchema):
 edit_request_loan_schema = EditRequestLoanSchema()
 
 
-class LoanBalanceSchema(ma.SQLAlchemyAutoSchema):
+class LoanBalanceSchema(ma.SQLAlchemySchema):
     class Meta:
         model = LoanBalance
         load_instance = True

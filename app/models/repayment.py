@@ -19,4 +19,4 @@ class Repayment(db.Model):
         ordering = ['-paid_at']
 
     def __repr__(self) -> str:
-        return f"User>> {self.user.fullname} paid {self.repay_amount} for {self.loan.amount} loan"
+        return f"User>> {self.user.full_name} paid {self.repay_amount}"

@@ -4,7 +4,7 @@ from flask.views import MethodView
 from app.models import Loan, RequestLoan, User, LoanBalance
 from app.extensions import db
 from decimal import Decimal
-from utils.admin import admin_required
+from app.utils import admin_required
 from app.constants import Status
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.schemas import loan_schema, request_loan_schema, edit_request_loan_schema, loan_balance_schema
