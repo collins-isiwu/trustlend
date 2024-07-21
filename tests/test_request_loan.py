@@ -47,8 +47,8 @@ def test_post_request_loan(client: FlaskClient, test_user: User):
     """Test POST method for creating a request loan."""
     token = get_jwt_token(test_user)
     data = {
-        'amount': 2000.837,
-        'amortization_type': 'WEEKLY',
+        'amount': 2000.84,
+        'amortization_rate': 'WEEKLY',
         'user_id': test_user.id, 
     }
 
@@ -59,18 +59,17 @@ def test_post_request_loan(client: FlaskClient, test_user: User):
         content_type='application/json'
     )
 
-    print("response>>>>>>>>>>>>>", response.json) 
     assert response.status_code == 201
     response_data = response.json
     assert response_data['success'] == True
     assert response_data['data']['amount'] == str(data['amount'])
-    assert response_data['data']['amortization_type'] == 'AmortizationTypeEnum.WEEKLY'
+    assert response_data['data']['amortization_rate'] == 'AmortizationRateEnum.WEEKLY'
 
 def test_get_request_loan(client: FlaskClient, test_user: User):
     """Test GET method for retrieving a request loan."""
     request_loan = RequestLoan(
         interest_rate=5.0,
-        amortization_type='WEEKLY',
+        amortization_rate='WEEKLY',
         amount=1000.0,
         approval=False,
         date_requested=datetime.now(),
@@ -94,7 +93,7 @@ def test_post_request_loan_with_existing(client: FlaskClient, test_user: User):
     # Create a pending loan request for the user
     pending_loan = RequestLoan(
         interest_rate=5.0,
-        amortization_type='WEEKLY',
+        amortization_rate='WEEKLY',
         amount=1000.0,
         approval=False,
         date_requested=datetime.now(),
@@ -106,7 +105,7 @@ def test_post_request_loan_with_existing(client: FlaskClient, test_user: User):
 
     data = {
         'amount': 2000.0,
-        'amortization_type': 'WEEKLY',
+        'amortization_rate': 'WEEKLY',
         'interest_rate': 5.0
     }
 
@@ -125,7 +124,7 @@ def test_put_request_loan_approve(client: FlaskClient, test_user: User):
     """Test PUT method for approving a loan request."""
     request_loan = RequestLoan(
         interest_rate=5.0,
-        amortization_type='WEEKLY',
+        amortization_rate='WEEKLY',
         amount=1000.0,
         approval=False,
         date_requested=datetime.now(),
@@ -156,7 +155,7 @@ def test_put_request_loan_already_approved(client: FlaskClient, test_user: User)
     """Test PUT method for already approved loan request."""
     request_loan = RequestLoan(
         interest_rate=5.0,
-        amortization_type='WEEKLY',
+        amortization_rate='WEEKLY',
         amount=1000.0,
         approval=True,  # Already approved
         date_requested=datetime.now(),

@@ -1,5 +1,5 @@
 from marshmallow import validate, fields
-from app.models import Loan, RequestLoan, AmortizationTypeEnum
+from app.models import Loan, RequestLoan, LoanBalance, AmortizationRateEnum
 from app.extensions import ma
 
 class RequestLoanSchema(ma.SQLAlchemyAutoSchema):
@@ -8,11 +8,11 @@ class RequestLoanSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
 
     interest_rate = fields.Float(dump_only=True, dump_default=RequestLoan.INTEREST_RATE)
-    amount = fields.Decimal(required=True, validate=validate.Range(min=0.01))
+    amount = fields.Decimal(required=True, places=2, validate=validate.Range(min=0.01))
     approval = fields.Boolean(dump_only=True)
     date_requested = fields.DateTime(dump_only=True)
-    amortization_type = fields.String(
-        required=True, validate=validate.OneOf([e.value for e in AmortizationTypeEnum])
+    amortization_rate = fields.String(
+        required=True, validate=validate.OneOf([e.value for e in AmortizationRateEnum])
     )
     user_id = fields.Integer(required=True, validate=validate.Range(min=1), load_only=True)
 
@@ -24,10 +24,10 @@ class LoanSchema(ma.SQLAlchemyAutoSchema):
         model = Loan
         load_instance = True
 
-    amount = fields.Decimal(required=True, validate=validate.Range(min=0.01))
+    amount = fields.Decimal(required=True, places=2, validate=validate.Range(min=0.01))
     paid_off = fields.Boolean(dump_only=True)
     user_id = fields.Integer(required=True, validate=validate.Range(min=1), load_only=True)
-    timestamp = fields.DateTime(dump_only=True)
+    start_at = fields.DateTime(dump_only=True)
     request_loan_id = fields.Integer(required=True, validate=validate.Range(min=1), load_only=True)
 
 loan_schema = LoanSchema()
@@ -41,3 +41,15 @@ class EditRequestLoanSchema(ma.SQLAlchemySchema):
     approval = fields.Boolean(required=True)
 
 edit_request_loan_schema = EditRequestLoanSchema()
+
+
+class LoanBalanceSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = LoanBalance
+        load_instance = True
+
+    total_loan = fields.Decimal(dump_only=True, places=2)
+    total_paid = fields.Decimal(dump_only=True, places=2)
+    last_updated = fields.DateTime(dump_only=True)
+
+loan_balance_schema = LoanBalanceSchema()

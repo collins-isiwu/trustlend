@@ -51,7 +51,7 @@ def test_get_loan_by_id(client: FlaskClient, test_user: User):
     user = User.query.first()
     request_loan = RequestLoan(
         interest_rate=5.0,
-        amortization_type='WEEKLY',
+        amortization_rate='WEEKLY',
         amount=1000.0,
         approval=True,
         date_requested=datetime.now(),
@@ -97,7 +97,7 @@ def test_get_loans_with_pagination(client: FlaskClient, test_user: User):
 
     request_loan = RequestLoan(
         interest_rate=5.0,
-        amortization_type='WEEKLY',
+        amortization_rate='WEEKLY',
         amount=86600.0,
         approval=True,
         date_requested=datetime.now(),
