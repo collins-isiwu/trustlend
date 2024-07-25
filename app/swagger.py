@@ -39,7 +39,7 @@ def swagger_spec():
             {
                 "name": "Loan",
                 "description": "Loan related endpoints"
-            }
+            },
         ],
         "paths": {
             "/api/v1/user/register": {
@@ -188,7 +188,7 @@ def swagger_spec():
                                 "$ref": "#/definitions/Error"
                             }
                         }
-                    }
+                    },
                 },
                 "put": {
                     "tags": ["User"],
@@ -226,6 +226,56 @@ def swagger_spec():
                     }
                 }
             },
+
+        # Repayment endpoints
+        "/api/v1/repayment": {
+            "post": {
+                "tags": ["Repayment"],
+                "summary": "Make Payment",
+                "description": "User can repay their loans using this endpoint",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "Authorization",
+                    "in": "header",
+                    "required": True,
+                    "type": "string",
+                    "description": "Bearer <access_token>"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Payment initialized successfully",
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                    }
+                }
+            }
+        },
+
+        "/api/v1/repayment/{reference}": {
+            "get": {
+                "tags": ["Repayment"],
+                "summary": "Get Payment",
+                "description": "Verify a user's payment",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "Authorization",
+                    "in": "header",
+                    "required": True,
+                    "type": "string",
+                    "description": "Bearer <access_token>"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Payment Verified!",
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                    }
+                }
+            }
+        },
+
             "/api/v1/verification": {
                 "get": {
                     "tags": ["Verification"],
